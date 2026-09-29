@@ -1,0 +1,3068 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SehatMart - Marketplace Kesehatan</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+body{
+    background:#f5f5f5;
+    color:#222;
+}
+header{
+    background:#fff;
+    padding:15px 5%;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.logo{
+    font-size:26px;
+    font-weight:bold;
+    color:#08a66a;
+    white-space:nowrap;
+}
+.logo span{color:#ff6b35}
+.search{
+    flex:1;
+    display:flex;
+    border:2px solid #08a66a;
+    border-radius:8px;
+    overflow:hidden;
+}
+.search input{
+    flex:1;
+    padding:12px;
+    border:none;
+    outline:none;
+    font-size:15px;
+}
+.search button{
+    width:55px;
+    border:none;
+    background:#08a66a;
+    color:white;
+    font-size:18px;
+}
+.cart{
+    border:none;
+    background:#e9fff5;
+    padding:12px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+}
+.cart span{
+    background:#ff5c35;
+    color:white;
+    padding:3px 7px;
+    border-radius:20px;
+    font-size:12px;
+}
+nav{
+    background:white;
+    display:flex;
+    gap:10px;
+    padding:12px 5%;
+    overflow-x:auto;
+}
+nav button{
+    border:none;
+    padding:9px 18px;
+    border-radius:20px;
+    cursor:pointer;
+    white-space:nowrap;
+    background:#eee;
+}
+nav button:hover,
+nav button.active{
+    background:#08a66a;
+    color:white;
+}
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+.banner{
+    background:linear-gradient(120deg,#dffff0,#fff0e8);
+    border-radius:18px;
+    padding:35px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+.banner h1{
+    font-size:34px;
+    margin:10px 0;
+}
+.banner p{
+    color:#555;
+    margin-bottom:18px;
+}
+.banner button{
+    background:#08a66a;
+    color:white;
+    border:none;
+    padding:12px 22px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.banner-icon{font-size:90px}
+.upload-box{
+    background:white;
+    border:2px dashed #08a66a;
+    border-radius:12px;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+.upload-box h2{margin-bottom:7px}
+.upload-box p{color:#777}
+.upload-button{
+    background:#ff6b35;
+    color:white;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+.toolbar select{
+    padding:9px;
+    border:1px solid #ddd;
+    border-radius:7px;
+}
+.products{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+}
+.product{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+    transition:.2s;
+    box-shadow:0 2px 7px rgba(0,0,0,.08);
+}
+.product:hover{
+    transform:translateY(-4px);
+    box-shadow:0 7px 18px rgba(0,0,0,.12);
+}
+.product-image{
+    height:175px;
+    background:#eef8f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:65px;
+    overflow:hidden;
+}
+.product-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.product-info{padding:12px}
+.category{
+    color:#08a66a;
+    font-size:12px;
+}
+.product-name{
+    margin:6px 0;
+    font-size:14px;
+    height:38px;
+    overflow:hidden;
+}
+.old-price{
+    color:#999;
+    text-decoration:line-through;
+    font-size:11px;
+}
+.price{
+    color:#e94e20;
+    font-size:17px;
+    font-weight:bold;
+    margin:3px 0;
+}
+.rating{
+    font-size:12px;
+    margin:5px 0;
+}
+.add-cart{
+    width:100%;
+    padding:8px;
+    background:white;
+    border:1px solid #08a66a;
+    color:#08a66a;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.add-cart:hover{
+    background:#08a66a;
+    color:white;
+}
+.favorite{
+    position:absolute;
+    right:8px;
+    top:8px;
+    border:none;
+    background:white;
+    border-radius:50%;
+    padding:7px;
+    cursor:pointer;
+    font-size:17px;
+}
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    z-index:200;
+    justify-content:center;
+    align-items:center;
+}
+.modal.active{display:flex}
+.modal-content{
+    background:white;
+    width:90%;
+    max-width:550px;
+    max-height:85vh;
+    overflow:auto;
+    border-radius:15px;
+    padding:22px;
+    position:relative;
+}
+.close{
+    position:absolute;
+    right:15px;
+    top:15px;
+    border:none;
+    background:#eee;
+    padding:7px;
+    border-radius:50%;
+    cursor:pointer;
+}
+.cart-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border-bottom:1px solid #eee;
+    padding:12px 0;
+}
+.cart-icon{font-size:35px}
+.quantity{
+    margin-left:auto;
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+.quantity button{
+    border:1px solid #ddd;
+    background:white;
+    padding:3px 9px;
+    cursor:pointer;
+}
+.total{
+    display:flex;
+    justify-content:space-between;
+    padding:20px 0;
+    font-size:19px;
+}
+.checkout{
+    width:100%;
+    background:#08a66a;
+    color:white;
+    border:none;
+    padding:13px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+.checkout-modal .modal-content{max-width:720px}
+.checkout-section{
+    border:1px solid #eee;
+    border-radius:10px;
+    padding:16px;
+    margin:12px 0;
+}
+.checkout-section h3{
+    margin-bottom:10px;
+    color:#333;
+}
+.address-box{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+}
+.address-icon{font-size:24px}
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+.form-group.full{grid-column:1/-1}
+.form-group label{
+    font-size:13px;
+    font-weight:bold;
+}
+.form-group input,
+.form-group textarea,
+.form-group select{
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:7px;
+    outline:none;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:#08a66a;
+}
+.shipping-option,
+.payment-option{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:11px;
+    margin:7px 0;
+    cursor:pointer;
+}
+.shipping-option:has(input:checked),
+.payment-option:has(input:checked){
+    border-color:#08a66a;
+    background:#f0fff8;
+}
+.shipping-option input,
+.payment-option input{
+    accent-color:#08a66a;
+}
+.voucher-row{
+    display:flex;
+    gap:8px;
+}
+.voucher-row input{
+    flex:1;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:7px;
+}
+.voucher-row button{
+    border:1px solid #08a66a;
+    color:#08a66a;
+    background:white;
+    padding:0 15px;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+}
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+}
+.summary-row.total-final{
+    border-top:1px solid #eee;
+    margin-top:8px;
+    padding-top:12px;
+    font-size:19px;
+    font-weight:bold;
+}
+.summary-row.discount{color:#08a66a}
+.place-order{
+    width:100%;
+    border:none;
+    background:#ee4d2d;
+    color:white;
+    padding:14px;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+.place-order:hover{background:#d93f24}
+.order-success{
+    text-align:center;
+    padding:18px 5px;
+}
+.success-icon{font-size:65px}
+.proof{
+    text-align:left;
+    background:#f7f7f7;
+    border:1px dashed #bbb;
+    border-radius:10px;
+    padding:15px;
+    margin:15px 0;
+}
+.proof-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:5px 0;
+}
+.simulation-note{
+    color:#d35400;
+    font-size:12px;
+    margin-top:10px;
+    font-style:italic;
+}
+.continue-btn{
+    width:100%;
+    background:#08a66a;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.toast{
+    position:fixed;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#222;
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    display:none;
+    z-index:500;
+}
+.edit-products-btn{
+    border:none;
+    background:#0b8f68;
+    color:white;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:700;
+    cursor:pointer;
+}
+.editor-modal-content{
+    max-width:1100px;
+    max-height:90vh;
+    overflow:auto;
+}
+.editor-help{
+    background:#f0faf6;
+    padding:12px 14px;
+    border-radius:10px;
+    margin-bottom:16px;
+}
+.editor-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+.editor-card{
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    background:#fff;
+}
+.editor-card h4{
+    margin-bottom:10px;
+    color:#08a66a;
+}
+.editor-card input,
+.editor-card select{
+    width:100%;
+    padding:9px;
+    margin:4px 0 8px;
+    border:1px solid #ddd;
+    border-radius:7px;
+}
+.editor-image{
+    width:100%;
+    height:120px;
+    border-radius:8px;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    margin-bottom:8px;
+    font-size:45px;
+}
+.editor-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.editor-actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+.editor-actions button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.save-editor{
+    background:#08a66a;
+    color:white;
+}
+.cancel-editor{
+    background:#eee;
+}
+@media(max-width:900px){
+    .products{
+        grid-template-columns:repeat(3,1fr);
+    }
+    .banner h1{font-size:27px}
+}
+@media(max-width:600px){
+    header{
+        padding:10px;
+        gap:8px;
+    }
+    .logo{font-size:20px}
+    .search input{width:100%}
+    .banner{padding:22px}
+    .banner h1{font-size:23px}
+    .banner-icon{font-size:50px}
+    .upload-box{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+    .products{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+    .product-image{height:145px}
+    .editor-grid{grid-template-columns:1fr}
+    .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Sehat<span>Mart</span></div>
+
+    <div class="search">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Cari produk kesehatan..."
+            oninput="searchProducts()"
+        >
+        <button onclick="searchProducts()">🔍</button>
+    </div>
+
+    <button class="cart" onclick="openCart()">
+        🛒 <span id="cartCount">0</span>
+    </button>
+</header>
+
+<nav>
+    <button class="active" onclick="filterCategory('Semua',this)">Semua</button>
+    <button onclick="filterCategory('Vitamin',this)">Vitamin</button>
+    <button onclick="filterCategory('Obat',this)">Obat</button>
+    <button onclick="filterCategory('Suplemen',this)">Suplemen</button>
+    <button onclick="filterCategory('Perawatan',this)">Perawatan</button>
+    <button onclick="filterCategory('Alat Kesehatan',this)">Alat Kesehatan</button>
+</nav>
+
+<div class="container">
+
+    <section class="banner">
+        <div>
+            <p>Selamat datang di</p>
+            <h1>SehatMart 🩺</h1>
+            <p>Belanja kebutuhan kesehatan dengan mudah.</p>
+            <button onclick="document.getElementById('productsSection').scrollIntoView()">
+                Belanja Sekarang
+            </button>
+        </div>
+        <div class="banner-icon">💊</div>
+    </section>
+
+    <section class="upload-box">
+        <div>
+            <h2>📷 Tambahkan Foto Produk</h2>
+            <p>
+                Pilih foto dari HP/komputer. Sistem mendukung sampai
+                <b>50 foto produk</b>.
+            </p>
+        </div>
+
+        <label class="upload-button">
+            Pilih Foto
+            <input
+                type="file"
+                id="photoInput"
+                accept="image/*"
+                multiple
+                hidden
+            >
+        </label>
+    </section>
+
+    <div class="toolbar">
+        <h2 id="productsSection">Produk Pilihan</h2>
+
+        <div>
+            <button class="edit-products-btn" onclick="openProductEditor()">
+                ✏️ Ubah Produk
+            </button>
+
+            <select id="sortSelect" onchange="sortProducts()">
+                <option value="default">Urutan</option>
+                <option value="low">Harga Terendah</option>
+                <option value="high">Harga Tertinggi</option>
+                <option value="name">Nama A-Z</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="products" id="productContainer"></div>
+
+</div>
+
+<!-- CART MODAL -->
+<div class="modal" id="cartModal">
+    <div class="modal-content">
+
+        <button class="close" onclick="closeCart()">✕</button>
+
+        <h2>🛒 Keranjang Belanja</h2>
+
+        <div id="cartItems"></div>
+
+        <div class="total">
+            <b>Total</b>
+            <b id="cartTotal">Rp0</b>
+        </div>
+
+        <button class="checkout" onclick="checkout()">
+            Lanjut Checkout
+        </button>
+
+    </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal checkout-modal" id="checkoutModal">
+
+    <div class="modal-content">
+
+        <button class="close" onclick="closeCheckout()">✕</button>
+
+        <h2>🛍️ Checkout</h2>
+
+        <div class="checkout-section">
+
+            <h3>📍 Data Pembeli</h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Nama</label>
+                    <input id="buyerName" type="text" placeholder="Nama lengkap">
+                </div>
+
+                <div class="form-group">
+                    <label>No. Telepon</label>
+                    <input id="buyerPhone" type="tel" placeholder="08xxxxxxxxxx">
+                </div>
+
+                <div class="form-group full">
+                    <label>Alamat</label>
+                    <textarea
+                        id="buyerAddress"
+                        rows="3"
+                        placeholder="Alamat lengkap"
+                    ></textarea>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="checkout-section">
+
+            <h3>🚚 Pilih Pengiriman</h3>
+
+            <label class="shipping-option">
+                <span>
+                    <input
+                        type="radio"
+                        name="shipping"
+                        value="12000"
+                        data-name="Reguler"
+                        checked
+                        onchange="renderCheckout()"
+                    >
+                    Reguler
+                </span>
+                <b>Rp12.000</b>
+            </label>
+
+            <label class="shipping-option">
+                <span>
+                    <input
+                        type="radio"
+                        name="shipping"
+                        value="20000"
+                        data-name="Express"
+                        onchange="renderCheckout()"
+                    >
+                    Express
+                </span>
+                <b>Rp20.000</b>
+            </label>
+
+        </div>
+
+        <div class="checkout-section">
+
+            <h3>💳 Metode Pembayaran</h3>
+
+            <label class="payment-option">
+                <span>
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="Tunai"
+                        checked
+                    >
+                    💵 Tunai
+                </span>
+            </label>
+
+            <label class="payment-option">
+                <span>
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="Transfer Bank"
+                    >
+                    🏦 Transfer Bank
+                </span>
+            </label>
+
+            <label class="payment-option">
+                <span>
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="E-Wallet"
+                    >
+                    📱 E-Wallet
+                </span>
+            </label>
+
+        </div>
+
+        <div class="checkout-section">
+
+            <h3>🎟️ Voucher</h3>
+
+            <div class="voucher-row">
+                <input
+                    id="voucherCode"
+                    type="text"
+                    placeholder="Masukkan kode voucher"
+                >
+                <button onclick="applyVoucher()">Pakai</button>
+            </div>
+
+            <p id="voucherMessage"></p>
+
+        </div>
+
+        <div class="checkout-section">
+
+            <h3>🧾 Ringkasan Pesanan</h3>
+
+            <div id="checkoutProducts"></div>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <b id="checkoutSubtotal">Rp0</b>
+            </div>
+
+            <div class="summary-row">
+                <span>Pengiriman</span>
+                <b id="checkoutShipping">Rp0</b>
+            </div>
+
+            <div class="summary-row discount">
+                <span>Diskon</span>
+                <b id="checkoutDiscount">Rp0</b>
+            </div>
+
+            <div class="summary-row total-final">
+                <span>Total</span>
+                <b id="checkoutGrandTotal">Rp0</b>
+            </div>
+
+        </div>
+
+        <button class="place-order" onclick="placeOrder()">
+            Buat Pesanan
+        </button>
+
+    </div>
+</div>
+
+<!-- PRODUCT EDITOR -->
+<div class="modal" id="productEditorModal">
+
+    <div class="modal-content editor-modal-content">
+
+        <button class="close" onclick="closeProductEditor()">✕</button>
+
+        <h2>✏️ Ubah Produk</h2>
+
+        <div class="editor-help">
+            <b>Maksimal 50 produk.</b>
+            Foto disimpan menggunakan IndexedDB agar tidak cepat memenuhi
+            kapasitas localStorage.
+        </div>
+
+        <div class="editor-grid" id="editorGrid"></div>
+
+        <div class="editor-actions">
+            <button class="cancel-editor" onclick="closeProductEditor()">
+                Batal
+            </button>
+
+            <button class="save-editor" onclick="saveProductEdits()">
+                💾 Simpan Semua
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+/* ==========================================
+   DATABASE FOTO - INDEXEDDB
+========================================== */
+
+const MAX_PRODUCTS = 50;
+
+let imageDB = null;
+
+function openImageDB(){
+
+    return new Promise((resolve,reject)=>{
+
+        const request =
+            indexedDB.open("SehatMartImageDB",1);
+
+        request.onupgradeneeded = function(event){
+
+            const db = event.target.result;
+
+            if(!db.objectStoreNames.contains("productImages")){
+
+                db.createObjectStore(
+                    "productImages",
+                    {keyPath:"productId"}
+                );
+
+            }
+        };
+
+        request.onsuccess = function(event){
+
+            imageDB = event.target.result;
+
+            resolve();
+
+        };
+
+        request.onerror = function(){
+
+            reject(request.error);
+
+        };
+
+    });
+
+}
+
+
+function saveImageToDB(productId,image){
+
+    return new Promise((resolve,reject)=>{
+
+        if(!imageDB){
+            reject(new Error("Database belum siap"));
+            return;
+        }
+
+        const transaction =
+            imageDB.transaction(
+                ["productImages"],
+                "readwrite"
+            );
+
+        const store =
+            transaction.objectStore("productImages");
+
+        store.put({
+            productId:productId,
+            image:image
+        });
+
+        transaction.oncomplete = function(){
+            resolve();
+        };
+
+        transaction.onerror = function(){
+            reject(transaction.error);
+        };
+
+    });
+
+}
+
+
+function getImageFromDB(productId){
+
+    return new Promise((resolve,reject)=>{
+
+        if(!imageDB){
+            resolve(null);
+            return;
+        }
+
+        const transaction =
+            imageDB.transaction(
+                ["productImages"],
+                "readonly"
+            );
+
+        const store =
+            transaction.objectStore("productImages");
+
+        const request =
+            store.get(productId);
+
+        request.onsuccess = function(){
+
+            resolve(
+                request.result
+                ? request.result.image
+                : null
+            );
+
+        };
+
+        request.onerror = function(){
+
+            reject(request.error);
+
+        };
+
+    });
+
+}
+
+
+/* ==========================================
+   DATA PRODUK
+========================================== */
+
+let products = [
+
+{
+id:1,
+name:"Vitamin C 500 mg",
+category:"Vitamin",
+price:25000,
+discount:22000,
+rating:4.8,
+icon:"🍊"
+},
+
+{
+id:2,
+name:"Vitamin D3 1000 IU",
+category:"Vitamin",
+price:35000,
+discount:30000,
+rating:4.9,
+icon:"☀️"
+},
+
+{
+id:3,
+name:"Vitamin B Complex",
+category:"Vitamin",
+price:30000,
+discount:27000,
+rating:4.7,
+icon:"💊"
+},
+
+{
+id:4,
+name:"Multivitamin Daily",
+category:"Vitamin",
+price:45000,
+discount:39000,
+rating:4.8,
+icon:"💊"
+},
+
+{
+id:5,
+name:"Zinc 20 mg",
+category:"Suplemen",
+price:28000,
+discount:25000,
+rating:4.7,
+icon:"💊"
+},
+
+{
+id:6,
+name:"Omega 3 Fish Oil",
+category:"Suplemen",
+price:65000,
+discount:58000,
+rating:4.9,
+icon:"🐟"
+},
+
+{
+id:7,
+name:"Calcium Vitamin D",
+category:"Suplemen",
+price:50000,
+discount:45000,
+rating:4.8,
+icon:"🦴"
+},
+
+{
+id:8,
+name:"Magnesium Tablet",
+category:"Suplemen",
+price:42000,
+discount:38000,
+rating:4.7,
+icon:"💊"
+},
+
+{
+id:9,
+name:"Vitamin E Softgel",
+category:"Vitamin",
+price:55000,
+discount:49000,
+rating:4.8,
+icon:"💊"
+},
+
+{
+id:10,
+name:"Paracetamol 500 mg",
+category:"Obat",
+price:12000,
+discount:10000,
+rating:4.9,
+icon:"💊"
+},
+
+{
+id:11,
+name:"Ibuprofen 200 mg",
+category:"Obat",
+price:18000,
+discount:15000,
+rating:4.7,
+icon:"💊"
+},
+
+{
+id:12,
+name:"Antasida Tablet",
+category:"Obat",
+price:10000,
+discount:8500,
+rating:4.6,
+icon:"💊"
+},
+
+{
+id:13,
+name:"Obat Batuk Sirup",
+category:"Obat",
+price:25000,
+discount:22000,
+rating:4.7,
+icon:"🧴"
+},
+
+{
+id:14,
+name:"Minyak Kayu Putih",
+category:"Perawatan",
+price:18000,
+discount:16000,
+rating:4.8,
+icon:"🧴"
+},
+
+{
+id:15,
+name:"Plester Luka",
+category:"Alat Kesehatan",
+price:10000,
+discount:8000,
+rating:4.7,
+icon:"🩹"
+},
+
+{
+id:16,
+name:"Masker Medis",
+category:"Alat Kesehatan",
+price:25000,
+discount:20000,
+rating:4.8,
+icon:"😷"
+},
+
+{
+id:17,
+name:"Hand Sanitizer",
+category:"Perawatan",
+price:20000,
+discount:17000,
+rating:4.8,
+icon:"🧴"
+},
+
+{
+id:18,
+name:"Sabun Antiseptik",
+category:"Perawatan",
+price:15000,
+discount:13000,
+rating:4.7,
+icon:"🧼"
+},
+
+{
+id:19,
+name:"Shampoo Anti Ketombe",
+category:"Perawatan",
+price:35000,
+discount:30000,
+rating:4.6,
+icon:"🧴"
+},
+
+{
+id:20,
+name:"Pasta Gigi Herbal",
+category:"Perawatan",
+price:22000,
+discount:19000,
+rating:4.8,
+icon:"🪥"
+},
+
+{
+id:21,
+name:"Obat Tetes Mata",
+category:"Obat",
+price:20000,
+discount:18000,
+rating:4.8,
+icon:"👁️"
+},
+
+{
+id:22,
+name:"Termometer Digital",
+category:"Alat Kesehatan",
+price:45000,
+discount:40000,
+rating:4.9,
+icon:"🌡️"
+},
+
+{
+id:23,
+name:"Tensimeter Digital",
+category:"Alat Kesehatan",
+price:350000,
+discount:299000,
+rating:4.9,
+icon:"🩺"
+},
+
+{
+id:24,
+name:"Oximeter",
+category:"Alat Kesehatan",
+price:180000,
+discount:150000,
+rating:4.8,
+icon:"🩺"
+},
+
+{
+id:25,
+name:"Koyo Hangat",
+category:"Perawatan",
+price:12000,
+discount:10000,
+rating:4.7,
+icon:"🩹"
+},
+
+{
+id:26,
+name:"Salep Luka",
+category:"Obat",
+price:25000,
+discount:22000,
+rating:4.7,
+icon:"🧴"
+},
+
+{
+id:27,
+name:"Vitamin Anak",
+category:"Vitamin",
+price:40000,
+discount:35000,
+rating:4.8,
+icon:"🧒"
+},
+
+{
+id:28,
+name:"Probiotik",
+category:"Suplemen",
+price:70000,
+discount:62000,
+rating:4.9,
+icon:"💊"
+},
+
+{
+id:29,
+name:"Madu Murni",
+category:"Suplemen",
+price:80000,
+discount:72000,
+rating:4.9,
+icon:"🍯"
+},
+
+{
+id:30,
+name:"Susu Kesehatan",
+category:"Suplemen",
+price:75000,
+discount:68000,
+rating:4.8,
+icon:"🥛"
+},
+
+{
+id:31,
+name:"Masker KN95",
+category:"Alat Kesehatan",
+price:50000,
+discount:45000,
+rating:4.9,
+icon:"😷"
+},
+
+{
+id:32,
+name:"Sarung Tangan Medis",
+category:"Alat Kesehatan",
+price:35000,
+discount:30000,
+rating:4.8,
+icon:"🧤"
+},
+
+{
+id:33,
+name:"Alkohol 70%",
+category:"Perawatan",
+price:18000,
+discount:15000,
+rating:4.8,
+icon:"🧴"
+},
+
+{
+id:34,
+name:"Kapas Medis",
+category:"Alat Kesehatan",
+price:10000,
+discount:8500,
+rating:4.7,
+icon:"⚪"
+},
+
+{
+id:35,
+name:"Betadine",
+category:"Obat",
+price:22000,
+discount:19000,
+rating:4.9,
+icon:"🧴"
+},
+
+{
+id:36,
+name:"Salep Gatal",
+category:"Obat",
+price:18000,
+discount:15000,
+rating:4.7,
+icon:"🧴"
+},
+
+{
+id:37,
+name:"Minyak Telon",
+category:"Perawatan",
+price:30000,
+discount:27000,
+rating:4.8,
+icon:"🧴"
+},
+
+{
+id:38,
+name:"Baby Lotion",
+category:"Perawatan",
+price:40000,
+discount:35000,
+rating:4.8,
+icon:"🧴"
+},
+
+{
+id:39,
+name:"Sunscreen SPF 50",
+category:"Perawatan",
+price:65000,
+discount:59000,
+rating:4.9,
+icon:"☀️"
+},
+
+{
+id:40,
+name:"Moisturizer",
+category:"Perawatan",
+price:55000,
+discount:49000,
+rating:4.8,
+icon:"🧴"
+},
+
+{
+id:41,
+name:"Face Wash",
+category:"Perawatan",
+price:35000,
+discount:30000,
+rating:4.8,
+icon:"🧼"
+},
+
+{
+id:42,
+name:"Lip Balm",
+category:"Perawatan",
+price:25000,
+discount:22000,
+rating:4.7,
+icon:"💄"
+},
+
+{
+id:43,
+name:"Essential Oil",
+category:"Perawatan",
+price:60000,
+discount:55000,
+rating:4.8,
+icon:"🌿"
+},
+
+{
+id:44,
+name:"Aromaterapi",
+category:"Perawatan",
+price:70000,
+discount:62000,
+rating:4.8,
+icon:"🌿"
+},
+
+{
+id:45,
+name:"Masker Wajah",
+category:"Perawatan",
+price:15000,
+discount:12000,
+rating:4.7,
+icon:"😷"
+},
+
+{
+id:46,
+name:"Kompres Instan",
+category:"Alat Kesehatan",
+price:20000,
+discount:17000,
+rating:4.7,
+icon:"❄️"
+},
+
+{
+id:47,
+name:"Kasa Steril",
+category:"Alat Kesehatan",
+price:12000,
+discount:10000,
+rating:4.8,
+icon:"🩹"
+},
+
+{
+id:48,
+name:"Perban Elastis",
+category:"Alat Kesehatan",
+price:25000,
+discount:22000,
+rating:4.8,
+icon:"🩹"
+},
+
+{
+id:49,
+name:"Kotak P3K",
+category:"Alat Kesehatan",
+price:120000,
+discount:100000,
+rating:4.9,
+icon:"🧰"
+},
+
+{
+id:50,
+name:"Stetoskop",
+category:"Alat Kesehatan",
+price:250000,
+discount:220000,
+rating:4.9,
+icon:"🩺"
+}
+
+];
+
+let cart = [];
+let currentCategory = "Semua";
+
+
+/* ==========================================
+   STORAGE PRODUK
+========================================== */
+
+function saveProductMetadata(){
+
+    const metadata =
+        products.map(product => {
+
+            const copy = {...product};
+
+            /*
+             * Jangan simpan Base64 foto ke localStorage.
+             * Foto disimpan di IndexedDB.
+             */
+            delete copy.image;
+
+            return copy;
+
+        });
+
+    localStorage.setItem(
+        "sehatmart_products",
+        JSON.stringify(metadata)
+    );
+}
+
+
+async function loadSavedProducts(){
+
+    const saved =
+        localStorage.getItem("sehatmart_products");
+
+    if(!saved) return;
+
+    try{
+
+        const savedProducts =
+            JSON.parse(saved);
+
+        if(!Array.isArray(savedProducts)) return;
+
+        /*
+         * Gabungkan data lama dengan 50 produk.
+         */
+        savedProducts.slice(0,MAX_PRODUCTS).forEach(savedProduct => {
+
+            const index =
+                products.findIndex(
+                    product => product.id === savedProduct.id
+                );
+
+            if(index !== -1){
+
+                /*
+                 * Pertahankan data produk.
+                 */
+                products[index] = {
+                    ...products[index],
+                    ...savedProduct
+                };
+
+            }
+
+        });
+
+
+        /*
+         * MIGRASI FOTO LAMA
+         *
+         * Jika sebelumnya foto disimpan sebagai Base64
+         * di localStorage, pindahkan foto tersebut
+         * ke IndexedDB.
+         */
+        for(const savedProduct of savedProducts.slice(0,MAX_PRODUCTS)){
+
+            if(
+                typeof savedProduct.image === "string" &&
+                savedProduct.image.length > 0
+            ){
+
+                try{
+
+                    const existing =
+                        await getImageFromDB(savedProduct.id);
+
+                    if(!existing){
+
+                        await saveImageToDB(
+                            savedProduct.id,
+                            savedProduct.image
+                        );
+
+                    }
+
+                }catch(error){
+
+                    console.error(
+                        "Gagal memindahkan foto lama:",
+                        error
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /*
+         * Setelah foto lama dipindahkan,
+         * localStorage hanya menyimpan metadata.
+         */
+        saveProductMetadata();
+
+    }catch(error){
+
+        console.error(
+            "Gagal membaca data produk lama:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   FORMAT HARGA
+========================================== */
+
+function rupiah(number){
+
+    return "Rp" +
+        Number(number || 0).toLocaleString(
+            "id-ID"
+        );
+
+}
+
+
+/* ==========================================
+   TAMPILKAN PRODUK
+========================================== */
+
+async function showProducts(){
+
+    const container =
+        document.getElementById("productContainer");
+
+    container.innerHTML = "";
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    let filtered =
+        products
+            .slice(0,MAX_PRODUCTS)
+            .filter(product => {
+
+                const matchCategory =
+                    currentCategory === "Semua" ||
+                    product.category === currentCategory;
+
+                const matchSearch =
+                    !search ||
+                    product.name
+                        .toLowerCase()
+                        .includes(search);
+
+                return matchCategory && matchSearch;
+
+            });
+
+
+    const sort =
+        document.getElementById("sortSelect").value;
+
+    if(sort === "low"){
+
+        filtered.sort(
+            (a,b)=>a.discount-b.discount
+        );
+
+    }else if(sort === "high"){
+
+        filtered.sort(
+            (a,b)=>b.discount-a.discount
+        );
+
+    }else if(sort === "name"){
+
+        filtered.sort(
+            (a,b)=>a.name.localeCompare(b.name)
+        );
+
+    }
+
+
+    for(const product of filtered){
+
+        const image =
+            await getImageFromDB(product.id);
+
+        const card =
+            document.createElement("div");
+
+        card.className = "product";
+
+        card.innerHTML = `
+
+            <button
+                class="favorite"
+                onclick="toggleFavorite(${product.id})"
+            >
+                ♡
+            </button>
+
+            <div class="product-image">
+
+                ${
+                    image
+                    ? `<img src="${image}" alt="${escapeHTML(product.name)}">`
+                    : product.icon
+                }
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="category">
+                    ${escapeHTML(product.category)}
+                </div>
+
+                <div class="product-name">
+                    ${escapeHTML(product.name)}
+                </div>
+
+                <div class="old-price">
+                    ${rupiah(product.price)}
+                </div>
+
+                <div class="price">
+                    ${rupiah(product.discount)}
+                </div>
+
+                <div class="rating">
+                    ⭐ ${product.rating}
+                </div>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart(${product.id})"
+                >
+                    + Keranjang
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(card);
+
+    }
+
+}
+
+
+/* ==========================================
+   SEARCH / FILTER / SORT
+========================================== */
+
+function searchProducts(){
+    showProducts();
+}
+
+
+function filterCategory(category,button){
+
+    currentCategory = category;
+
+    document
+        .querySelectorAll("nav button")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    showProducts();
+}
+
+
+function sortProducts(){
+    showProducts();
+}
+
+
+/* ==========================================
+   FAVORITE
+========================================== */
+
+function toggleFavorite(id){
+
+    showToast("Produk ditambahkan ke favorit ❤️");
+
+}
+
+
+/* ==========================================
+   CART
+========================================== */
+
+function addToCart(id){
+
+    const existing =
+        cart.find(item => item.id === id);
+
+    if(existing){
+
+        existing.qty++;
+
+    }else{
+
+        cart.push({
+            id:id,
+            qty:1
+        });
+
+    }
+
+    saveCart();
+
+    updateCartCount();
+
+    showToast("Produk ditambahkan ke keranjang 🛒");
+
+}
+
+
+function saveCart(){
+
+    localStorage.setItem(
+        "sehatmart_cart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+function loadCart(){
+
+    try{
+
+        const saved =
+            localStorage.getItem("sehatmart_cart");
+
+        if(saved){
+
+            const parsed =
+                JSON.parse(saved);
+
+            if(Array.isArray(parsed)){
+                cart = parsed;
+            }
+
+        }
+
+    }catch(error){
+
+        cart = [];
+
+    }
+
+}
+
+
+function updateCartCount(){
+
+    const total =
+        cart.reduce(
+            (sum,item)=>sum + item.qty,
+            0
+        );
+
+    document.getElementById("cartCount").textContent =
+        total;
+
+}
+
+
+function openCart(){
+
+    renderCart();
+
+    document
+        .getElementById("cartModal")
+        .classList.add("active");
+
+}
+
+
+function closeCart(){
+
+    document
+        .getElementById("cartModal")
+        .classList.remove("active");
+
+}
+
+
+function renderCart(){
+
+    const container =
+        document.getElementById("cartItems");
+
+    container.innerHTML = "";
+
+    let total = 0;
+
+    if(cart.length === 0){
+
+        container.innerHTML =
+            "<p style='padding:20px 0'>Keranjang masih kosong.</p>";
+
+    }
+
+
+    cart.forEach(item => {
+
+        const product =
+            products.find(
+                p => p.id === item.id
+            );
+
+        if(!product) return;
+
+        const subtotal =
+            product.discount * item.qty;
+
+        total += subtotal;
+
+        const row =
+            document.createElement("div");
+
+        row.className = "cart-item";
+
+        row.innerHTML = `
+
+            <div class="cart-icon">
+                ${product.icon}
+            </div>
+
+            <div>
+                <b>${escapeHTML(product.name)}</b>
+                <div>
+                    ${rupiah(product.discount)}
+                </div>
+            </div>
+
+            <div class="quantity">
+
+                <button onclick="changeQuantity(${product.id},-1)">
+                    −
+                </button>
+
+                <span>${item.qty}</span>
+
+                <button onclick="changeQuantity(${product.id},1)">
+                    +
+                </button>
+
+            </div>
+
+        `;
+
+        container.appendChild(row);
+
+    });
+
+
+    document.getElementById("cartTotal").textContent =
+        rupiah(total);
+
+}
+
+
+function changeQuantity(id,change){
+
+    const item =
+        cart.find(item => item.id === id);
+
+    if(!item) return;
+
+    item.qty += change;
+
+    if(item.qty <= 0){
+
+        cart =
+            cart.filter(
+                item => item.id !== id
+            );
+
+    }
+
+    saveCart();
+
+    updateCartCount();
+
+    renderCart();
+
+}
+
+
+/* ==========================================
+   EDITOR 50 PRODUK
+========================================== */
+
+async function openProductEditor(){
+
+    const grid =
+        document.getElementById("editorGrid");
+
+    grid.innerHTML = "";
+
+    for(
+        let i=0;
+        i<Math.min(MAX_PRODUCTS,products.length);
+        i++
+    ){
+
+        const product = products[i];
+
+        const image =
+            await getImageFromDB(product.id);
+
+        const card =
+            document.createElement("div");
+
+        card.className = "editor-card";
+
+        card.innerHTML = `
+
+            <h4>Produk ${i+1}</h4>
+
+            <div class="editor-image">
+
+                ${
+                    image
+                    ? `<img
+                        id="preview-${product.id}"
+                        src="${image}"
+                      >`
+                    : `<span id="preview-${product.id}">
+                        ${product.icon}
+                      </span>`
+                }
+
+            </div>
+
+            <label>Foto Produk</label>
+
+            <input
+                type="file"
+                accept="image/*"
+                data-image-product="${product.id}"
+            >
+
+            <label>Nama Produk</label>
+
+            <input
+                type="text"
+                value="${escapeAttribute(product.name)}"
+                data-name-product="${product.id}"
+            >
+
+            <label>Kategori</label>
+
+            <select data-category-product="${product.id}">
+
+                <option
+                    ${product.category==="Vitamin"?"selected":""}
+                >
+                    Vitamin
+                </option>
+
+                <option
+                    ${product.category==="Obat"?"selected":""}
+                >
+                    Obat
+                </option>
+
+                <option
+                    ${product.category==="Suplemen"?"selected":""}
+                >
+                    Suplemen
+                </option>
+
+                <option
+                    ${product.category==="Perawatan"?"selected":""}
+                >
+                    Perawatan
+                </option>
+
+                <option
+                    ${product.category==="Alat Kesehatan"?"selected":""}
+                >
+                    Alat Kesehatan
+                </option>
+
+            </select>
+
+            <label>Harga</label>
+
+            <input
+                type="number"
+                value="${product.price}"
+                data-price-product="${product.id}"
+            >
+
+            <label>Harga Diskon</label>
+
+            <input
+                type="number"
+                value="${product.discount}"
+                data-discount-product="${product.id}"
+            >
+
+        `;
+
+        grid.appendChild(card);
+
+    }
+
+
+    /*
+     * Preview foto yang baru dipilih.
+     */
+    grid
+        .querySelectorAll(
+            'input[type="file"][data-image-product]'
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "change",
+                function(){
+
+                    const file =
+                        this.files[0];
+
+                    if(!file) return;
+
+                    const productId =
+                        Number(
+                            this.dataset.imageProduct
+                        );
+
+                    const reader =
+                        new FileReader();
+
+                    reader.onload =
+                        function(event){
+
+                            const preview =
+                                document.getElementById(
+                                    "preview-" + productId
+                                );
+
+                            if(!preview) return;
+
+                            if(
+                                preview.tagName === "IMG"
+                            ){
+
+                                preview.src =
+                                    event.target.result;
+
+                            }else{
+
+                                preview.outerHTML =
+                                    `<img
+                                        id="preview-${productId}"
+                                        src="${event.target.result}"
+                                        style="width:100%;height:100%;object-fit:cover"
+                                    >`;
+
+                            }
+
+                        };
+
+                    reader.readAsDataURL(file);
+
+                }
+            );
+
+        });
+
+
+    document
+        .getElementById("productEditorModal")
+        .classList.add("active");
+
+}
+
+
+function closeProductEditor(){
+
+    document
+        .getElementById("productEditorModal")
+        .classList.remove("active");
+
+}
+
+
+async function saveProductEdits(){
+
+    /*
+     * Simpan data 50 produk.
+     */
+    for(
+        let i=0;
+        i<Math.min(MAX_PRODUCTS,products.length);
+        i++
+    ){
+
+        const product =
+            products[i];
+
+        const nameInput =
+            document.querySelector(
+                `[data-name-product="${product.id}"]`
+            );
+
+        const categoryInput =
+            document.querySelector(
+                `[data-category-product="${product.id}"]`
+            );
+
+        const priceInput =
+            document.querySelector(
+                `[data-price-product="${product.id}"]`
+            );
+
+        const discountInput =
+            document.querySelector(
+                `[data-discount-product="${product.id}"]`
+            );
+
+        if(nameInput){
+            product.name =
+                nameInput.value.trim() ||
+                product.name;
+        }
+
+        if(categoryInput){
+            product.category =
+                categoryInput.value;
+        }
+
+        if(priceInput){
+            product.price =
+                Number(priceInput.value) ||
+                product.price;
+        }
+
+        if(discountInput){
+            product.discount =
+                Number(discountInput.value) ||
+                product.discount;
+        }
+
+
+        const imageInput =
+            document.querySelector(
+                `[data-image-product="${product.id}"]`
+            );
+
+        if(
+            imageInput &&
+            imageInput.files &&
+            imageInput.files[0]
+        ){
+
+            const file =
+                imageInput.files[0];
+
+            await new Promise(resolve => {
+
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    async function(event){
+
+                        try{
+
+                            await saveImageToDB(
+                                product.id,
+                                event.target.result
+                            );
+
+                        }catch(error){
+
+                            console.error(
+                                "Gagal menyimpan foto:",
+                                error
+                            );
+
+                        }
+
+                        resolve();
+
+                    };
+
+                reader.readAsDataURL(file);
+
+            });
+
+        }
+
+    }
+
+
+    saveProductMetadata();
+
+    await showProducts();
+
+    closeProductEditor();
+
+    showToast(
+        "50 data produk berhasil disimpan. 📷"
+    );
+
+}
+
+
+/* ==========================================
+   UPLOAD FOTO BANYAK
+========================================== */
+
+document
+    .getElementById("photoInput")
+    .addEventListener(
+        "change",
+        async function(){
+
+            const files =
+                Array.from(this.files);
+
+            if(!files.length) return;
+
+            /*
+             * Cari slot produk yang belum mempunyai foto.
+             */
+            const availableProducts = [];
+
+            for(
+                const product of products.slice(0,MAX_PRODUCTS)
+            ){
+
+                const image =
+                    await getImageFromDB(product.id);
+
+                if(!image){
+
+                    availableProducts.push(product);
+
+                }
+
+            }
+
+
+            if(files.length > availableProducts.length){
+
+                showToast(
+                    `Hanya ${availableProducts.length} slot foto yang masih kosong. Maksimal 50 foto.`
+                );
+
+            }
+
+
+            const filesToSave =
+                files.slice(
+                    0,
+                    availableProducts.length
+                );
+
+
+            for(
+                let i=0;
+                i<filesToSave.length;
+                i++
+            ){
+
+                const file =
+                    filesToSave[i];
+
+                const product =
+                    availableProducts[i];
+
+                await new Promise(resolve => {
+
+                    const reader =
+                        new FileReader();
+
+                    reader.onload =
+                        async function(event){
+
+                            try{
+
+                                await saveImageToDB(
+                                    product.id,
+                                    event.target.result
+                                );
+
+                            }catch(error){
+
+                                console.error(
+                                    "Gagal menyimpan foto:",
+                                    error
+                                );
+
+                            }
+
+                            resolve();
+
+                        };
+
+                    reader.readAsDataURL(file);
+
+                });
+
+            }
+
+
+            saveProductMetadata();
+
+            await showProducts();
+
+
+            if(filesToSave.length){
+
+                showToast(
+                    `${filesToSave.length} foto berhasil disimpan. Total kapasitas: 50 foto. 📷`
+                );
+
+            }
+
+
+            this.value = "";
+
+        }
+    );
+
+
+/* ==========================================
+   CHECKOUT
+========================================== */
+
+function checkout(){
+
+    if(cart.length===0){
+
+        showToast(
+            "Keranjang masih kosong"
+        );
+
+        return;
+
+    }
+
+    document
+        .getElementById("cartModal")
+        .classList.remove("active");
+
+    document
+        .getElementById("checkoutModal")
+        .classList.add("active");
+
+    document
+        .getElementById("voucherCode")
+        .value = "";
+
+    document
+        .getElementById("voucherMessage")
+        .textContent = "";
+
+    window.checkoutDiscount = 0;
+
+    renderCheckout();
+
+}
+
+
+function closeCheckout(){
+
+    document
+        .getElementById("checkoutModal")
+        .classList.remove("active");
+
+}
+
+
+function getShipping(){
+
+    const selected =
+        document.querySelector(
+            'input[name="shipping"]:checked'
+        );
+
+    return selected
+        ? Number(selected.value)
+        : 12000;
+
+}
+
+
+function renderCheckout(){
+
+    let subtotal = 0;
+
+    const container =
+        document.getElementById(
+            "checkoutProducts"
+        );
+
+    container.innerHTML = "";
+
+
+    cart.forEach(item => {
+
+        const product =
+            products.find(
+                p => p.id === item.id
+            );
+
+        if(!product) return;
+
+        const itemTotal =
+            product.discount * item.qty;
+
+        subtotal += itemTotal;
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "summary-row";
+
+        row.innerHTML = `
+            <span>
+                ${escapeHTML(product.name)}
+                × ${item.qty}
+            </span>
+
+            <b>
+                ${rupiah(itemTotal)}
+            </b>
+        `;
+
+        container.appendChild(row);
+
+    });
+
+
+    const shipping =
+        getShipping();
+
+    const discount =
+        window.checkoutDiscount || 0;
+
+    const grandTotal =
+        Math.max(
+            0,
+            subtotal + shipping - discount
+        );
+
+
+    document
+        .getElementById("checkoutSubtotal")
+        .textContent =
+        rupiah(subtotal);
+
+    document
+        .getElementById("checkoutShipping")
+        .textContent =
+        rupiah(shipping);
+
+    document
+        .getElementById("checkoutDiscount")
+        .textContent =
+        "-" + rupiah(discount);
+
+    document
+        .getElementById("checkoutGrandTotal")
+        .textContent =
+        rupiah(grandTotal);
+
+}
+
+
+function applyVoucher(){
+
+    const code =
+        document
+            .getElementById("voucherCode")
+            .value
+            .trim()
+            .toUpperCase();
+
+    const message =
+        document.getElementById(
+            "voucherMessage"
+        );
+
+
+    if(code === "SEHAT10"){
+
+        let subtotal =
+            cart.reduce(
+                (sum,item) => {
+
+                    const product =
+                        products.find(
+                            p => p.id === item.id
+                        );
+
+                    return sum +
+                        (
+                            product
+                            ? product.discount * item.qty
+                            : 0
+                        );
+
+                },
+                0
+            );
+
+        window.checkoutDiscount =
+            Math.min(
+                Math.floor(subtotal * 0.10),
+                20000
+            );
+
+        message.textContent =
+            "Voucher SEHAT10 berhasil digunakan 🎉";
+
+        message.style.color =
+            "#08a66a";
+
+    }else if(code === ""){
+
+        window.checkoutDiscount = 0;
+
+        message.textContent = "";
+
+    }else{
+
+        window.checkoutDiscount = 0;
+
+        message.textContent =
+            "Voucher tidak ditemukan.";
+
+        message.style.color =
+            "#e94e20";
+
+    }
+
+    renderCheckout();
+
+}
+
+
+function placeOrder(){
+
+    const name =
+        document
+            .getElementById("buyerName")
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById("buyerPhone")
+            .value
+            .trim();
+
+    const address =
+        document
+            .getElementById("buyerAddress")
+            .value
+            .trim();
+
+
+    if(!name || !phone || !address){
+
+        showToast(
+            "Lengkapi nama, nomor telepon, dan alamat terlebih dahulu."
+        );
+
+        return;
+
+    }
+
+
+    const payment =
+        document.querySelector(
+            'input[name="payment"]:checked'
+        ).value;
+
+
+    const shippingRadio =
+        document.querySelector(
+            'input[name="shipping"]:checked'
+        );
+
+    const shippingName =
+        shippingRadio
+        ? shippingRadio.dataset.name
+        : "Reguler";
+
+
+    let subtotal =
+        cart.reduce(
+            (sum,item) => {
+
+                const product =
+                    products.find(
+                        p => p.id === item.id
+                    );
+
+                return sum +
+                    (
+                        product
+                        ? product.discount * item.qty
+                        : 0
+                    );
+
+            },
+            0
+        );
+
+
+    const shipping =
+        getShipping();
+
+    const discount =
+        window.checkoutDiscount || 0;
+
+    const grandTotal =
+        Math.max(
+            0,
+            subtotal + shipping - discount
+        );
+
+
+    const orderId =
+        "SM-" +
+        Date.now()
+            .toString()
+            .slice(-8);
+
+
+    const orderDate =
+        new Date().toLocaleString(
+            "id-ID",
+            {
+                dateStyle:"medium",
+                timeStyle:"short"
+            }
+        );
+
+
+    document.getElementById(
+        "checkoutModal"
+    ).innerHTML = `
+
+        <div class="modal-content">
+
+            <div class="order-success">
+
+                <div class="success-icon">
+                    ✅
+                </div>
+
+                <h2>
+                    Pesanan Berhasil Dibuat!
+                </h2>
+
+                <p>
+                    Terima kasih,
+                    <b>${escapeHTML(name)}</b>.
+                </p>
+
+                <div class="proof">
+
+                    <h3>
+                        🧾 Bukti Pesanan
+                    </h3>
+
+                    <div class="proof-row">
+                        <span>No. Pesanan</span>
+                        <b>${orderId}</b>
+                    </div>
+
+                    <div class="proof-row">
+                        <span>Tanggal</span>
+                        <span>${orderDate}</span>
+                    </div>
+
+                    <div class="proof-row">
+                        <span>Pembayaran</span>
+                        <span>${escapeHTML(payment)}</span>
+                    </div>
+
+                    <div class="proof-row">
+                        <span>Pengiriman</span>
+                        <span>${escapeHTML(shippingName)}</span>
+                    </div>
+
+                    <div class="proof-row">
+                        <span>Nama</span>
+                        <span>${escapeHTML(name)}</span>
+                    </div>
+
+                    <div class="proof-row">
+                        <span>Alamat</span>
+                        <span>${escapeHTML(address)}</span>
+                    </div>
+
+                    <div class="proof-row">
+                        <strong>Total</strong>
+                        <strong>${rupiah(grandTotal)}</strong>
+                    </div>
+
+                    <div class="simulation-note">
+                        * Bukti ini merupakan simulasi
+                        pembayaran/pesanan untuk keperluan demo.
+                        Tidak terhubung ke bank, QRIS,
+                        atau sistem pembayaran nyata.
+                    </div>
+
+                </div>
+
+                <button
+                    class="continue-btn"
+                    onclick="finishOrder()"
+                >
+                    Kembali Belanja
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function finishOrder(){
+
+    cart = [];
+
+    saveCart();
+
+    closeCheckout();
+
+    showProducts();
+
+    showToast(
+        "Pesanan demo berhasil disimpan 🎉"
+    );
+
+}
+
+
+/* ==========================================
+   KEAMANAN HTML
+========================================== */
+
+function escapeHTML(text){
+
+    return String(text).replace(
+        /[&<>"']/g,
+        char => ({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        }[char])
+    );
+
+}
+
+
+function escapeAttribute(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/"/g,"&quot;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+
+/* ==========================================
+   NOTIFIKASI
+========================================== */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent =
+        message;
+
+    toast.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(
+            ()=>{
+                toast.style.display =
+                    "none";
+            },
+            2500
+        );
+
+}
+
+
+/* ==========================================
+   MULAI APLIKASI
+========================================== */
+
+(async function initSehatMart(){
+
+    try{
+
+        /*
+         * Buka database foto terlebih dahulu.
+         */
+        await openImageDB();
+
+        /*
+         * Baca produk lama dan
+         * pindahkan foto Base64 lama.
+         */
+        await loadSavedProducts();
+
+        /*
+         * Tampilkan seluruh produk.
+         */
+        await showProducts();
+
+        /*
+         * Ambil keranjang lama.
+         */
+        loadCart();
+
+        updateCartCount();
+
+    }catch(error){
+
+        console.error(
+            "Gagal memulai SehatMart:",
+            error
+        );
+
+        /*
+         * Tetap tampilkan produk
+         * jika database mengalami masalah.
+         */
+        loadCart();
+        updateCartCount();
+        showProducts();
+
+    }
+
+})();
+
+
+/* ==========================================
+   TUTUP MODAL KETIKA KLIK DI LUAR
+========================================== */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const cartModal =
+            document.getElementById(
+                "cartModal"
+            );
+
+        const checkoutModal =
+            document.getElementById(
+                "checkoutModal"
+            );
+
+        const productEditorModal =
+            document.getElementById(
+                "productEditorModal"
+            );
+
+
+        if(event.target === cartModal){
+
+            closeCart();
+
+        }
+
+
+        if(event.target === checkoutModal){
+
+            closeCheckout();
+
+        }
+
+
+        if(
+            event.target === productEditorModal
+        ){
+
+            closeProductEditor();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
